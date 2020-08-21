@@ -1,0 +1,1 @@
+docker build -t nima-http . -f Dockerfile.server

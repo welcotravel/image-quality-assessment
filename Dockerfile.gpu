@@ -1,4 +1,5 @@
-FROM tensorflow/tensorflow:2.0.0-gpu-py3
+FROM tensorflow/tensorflow:2.3.0
+# FROM tensorflow/tensorflow:2.0.0-gpu-py3
 
 # Install system packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -12,13 +13,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       wget && \
     rm -rf /var/lib/apt/lists/*
 
-COPY src /src
-COPY entrypoints /src/entrypoints
+COPY image_quality /image_quality
+COPY entrypoints /image_quality/entrypoints
 
-WORKDIR /src
+WORKDIR /image_quality
 
 RUN pip install -r requirements.txt
 
-ENV PYTHONPATH='/src/:$PYTHONPATH'
+ENV PYTHONPATH='/image_quality/:$PYTHONPATH'
 
 ENTRYPOINT ["entrypoints/entrypoint.train.gpu.sh"]

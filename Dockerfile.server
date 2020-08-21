@@ -1,5 +1,6 @@
 FROM tensorflow/tensorflow:2.3.0
 
+
 # Install system packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
       bzip2 \
@@ -14,6 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY image_quality /image_quality
 COPY entrypoints /image_quality/entrypoints
+COPY models /models
 
 WORKDIR /image_quality
 
@@ -21,4 +23,8 @@ RUN pip install -r requirements.txt
 
 ENV PYTHONPATH='/image_quality/:$PYTHONPATH'
 
-ENTRYPOINT ["entrypoints/entrypoint.train.cpu.sh"]
+CMD ["entrypoints/entrypoint.predict.server.sh MobileNet /image_quality/weights.hdf5"]
+
+ENTRYPOINT ["entrypoints/entrypoint.predict.server.sh"]
+
+EXPOSE 5005
