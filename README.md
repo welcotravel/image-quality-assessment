@@ -1,3 +1,14 @@
+# Ops
+To build and run docker server: docker_build_server.sh, and docker_run_server.sh
+
+Also added example of generating http requests to docker server
+./docker_request_server.sh https://i.pinimg.com/originals/ed/8a/2a/ed8a2af0c03ecfd84878566aa5dc56dc.jpg
+
+results
+```
+[{"image_id":"ed8a2af0c03ecfd84878566aa5dc56dc","mean_score_prediction":5.374127000570297}]
+```
+
 # Image Quality Assessment
 
 [![Build Status](https://travis-ci.org/idealo/image-quality-assessment.svg?branch=master)](https://travis-ci.org/idealo/image-quality-assessment)
