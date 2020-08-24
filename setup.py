@@ -11,7 +11,11 @@ setup(
   license='Apache License 2.0',
   packages=find_packages(),
   install_requires = [
-    
+    'tensorflow==2.3.*',
+    'nose',
+    'sklearn',
+    'pillow==5.0.*',
+    'Flask==1.0.*'
   ],
   # package_data={'image_quality': []},
   zip_safe=False
