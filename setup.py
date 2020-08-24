@@ -14,8 +14,10 @@ setup(
     'tensorflow==2.3.*',
     'nose',
     'sklearn',
-    'pillow==5.0.*',
-    'Flask==1.0.*'
+    'Pillow==7.2.*',
+    'Flask==1.0.*',
+    'keras',
+    'video-kf'
   ],
   # package_data={'image_quality': []},
   zip_safe=False

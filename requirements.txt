@@ -1,6 +1,7 @@
 tensorflow==2.3.*
 nose
 sklearn
-pillow==5.0.*
+Pillow==5.0.*
 Flask==1.0.*
 keras
+video-kf
