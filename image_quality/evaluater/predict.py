@@ -97,11 +97,14 @@ def score_video(model,url_to_video):
   filename = os.path.basename(url_to_video)
   path_to_video = os.path.join(temp_dir,filename)
   urllib.request.urlretrieve(url_to_video, path_to_video)
-  vf.extract_keyframes(path_to_video, method='iframes')
+  vf.extract_keyframes(path_to_video, ffmpeg_exe='/usr/bin/ffmpeg',ffprobe_exe='/usr/bin/ffprobe',method='iframes')
   scores = score_images(model,os.path.join(temp_dir,'keyframes'))
   print('rank_video scores',scores)
   # average 3 highest scores for media score
-  vals = sorted(scores, key=lambda x: x['mean_score_prediction'], reverse=True)
+  vals = []
+  for score in scores:
+    vals.append(score['mean_score_prediction'])
+  vals = sorted(vals, reverse=True)
   vals = vals[:3]
   avg = sum(vals)/len(vals)
   shutil.rmtree(temp_dir)
