@@ -7,7 +7,7 @@ from utils import utils
 
 class TrainDataGenerator(tf.keras.utils.Sequence):
     '''inherits from Keras Sequence base object, allows to use multiprocessing in .fit_generator'''
-    def __init__(self, samples, img_dir, batch_size, n_classes, basenet_preprocess, img_format,
+    def __init__(self, samples, img_dir, batch_size, n_classes, basenet_preprocess,
                  img_load_dims=(256, 256), img_crop_dims=(224, 224), shuffle=True):
         self.samples = samples
         self.img_dir = img_dir
@@ -17,7 +17,6 @@ class TrainDataGenerator(tf.keras.utils.Sequence):
         self.img_load_dims = img_load_dims  # dimensions that images get resized into when loaded
         self.img_crop_dims = img_crop_dims  # dimensions that images get randomly cropped to
         self.shuffle = shuffle
-        self.img_format = img_format
         self.on_epoch_end()  # call ensures that samples are shuffled in first epoch if shuffle is set to True
 
     def __len__(self):
@@ -41,7 +40,7 @@ class TrainDataGenerator(tf.keras.utils.Sequence):
 
         for i, sample in enumerate(batch_samples):
             # load and randomly augment image
-            img_file = os.path.join(self.img_dir, '{}.{}'.format(sample['image_id'], self.img_format))
+            img_file = os.path.join(self.img_dir, '{}'.format(sample['image_id']))
             img = utils.load_image(img_file, self.img_load_dims)
             if img is not None:
                 img = utils.random_crop(img, self.img_crop_dims)
@@ -60,7 +59,7 @@ class TrainDataGenerator(tf.keras.utils.Sequence):
 
 class TestDataGenerator(tf.keras.utils.Sequence):
     '''inherits from Keras Sequence base object, allows to use multiprocessing in .fit_generator'''
-    def __init__(self, samples, img_dir, batch_size, n_classes, basenet_preprocess, img_format,
+    def __init__(self, samples, img_dir, batch_size, n_classes, basenet_preprocess,
                  img_load_dims=(224, 224)):
         self.samples = samples
         self.img_dir = img_dir
@@ -68,7 +67,6 @@ class TestDataGenerator(tf.keras.utils.Sequence):
         self.n_classes = n_classes
         self.basenet_preprocess = basenet_preprocess  # Keras basenet specific preprocessing function
         self.img_load_dims = img_load_dims  # dimensions that images get resized into when loaded
-        self.img_format = img_format
         self.on_epoch_end()  # call ensures that samples are shuffled in first epoch if shuffle is set to True
 
     def __len__(self):
@@ -90,7 +88,7 @@ class TestDataGenerator(tf.keras.utils.Sequence):
 
         for i, sample in enumerate(batch_samples):
             # load and randomly augment image
-            img_file = os.path.join(self.img_dir, '{}.{}'.format(sample['image_id'], self.img_format))
+            img_file = os.path.join(self.img_dir, '{}'.format(sample['image_id']))
             img = utils.load_image(img_file, self.img_load_dims)
             if img is not None:
                 X[i, ] = img

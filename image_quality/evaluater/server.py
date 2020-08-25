@@ -3,7 +3,7 @@
 
 import os
 from flask import Flask, request, jsonify
-from evaluater.predict import image_file_to_json, image_dir_to_json, predict
+from evaluater.predict import image_file_to_json, image_dir_to_json, predict, score_images
 from utils.utils import calc_mean_score, save_json
 import urllib
 import shutil
@@ -22,34 +22,6 @@ def load_model(config):
     model.nima_model.load_weights(config.weights_file)
     # model.nima_model._make_predict_function()  # https://github.com/keras-team/keras/issues/6462
     model.nima_model.summary()
-
-def main(image_source, predictions_file, img_format='jpg'):
-    # load samples
-    if os.path.isfile(image_source):
-        image_dir, samples = image_file_to_json(image_source)
-    else:
-        image_dir = image_source
-        samples = image_dir_to_json(image_dir, img_type='jpg')
-
-    ImageFile.LOAD_TRUNCATED_IMAGES = True
-    Image.MAX_IMAGE_PIXELS = None
-
-    # initialize data generator
-    data_generator = TestDataGenerator(samples, image_dir, 64, 10, model.preprocessing_function(),
-                                       img_format=img_format)
-
-    # get predictions
-    predictions = predict(model.nima_model, data_generator)
-    K.clear_session()
-
-    # calc mean scores and add to samples
-    for i, sample in enumerate(samples):
-        sample['mean_score_prediction'] = calc_mean_score(predictions[i])
-
-    if predictions_file is not None:
-        save_json(samples, predictions_file)
-
-    return samples
 
 @app.route('/prediction', methods=['POST'])
 def prediction():
@@ -70,8 +42,7 @@ def prediction():
                 except:
                     print('An exception occurred :' + image)
 
-            result = main('temp', None)
-
+            result = score_images(model,'temp')
             return jsonify(result)
 
         return jsonify({'error': 'Image is not available'})

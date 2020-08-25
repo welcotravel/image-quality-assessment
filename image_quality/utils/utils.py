@@ -4,7 +4,6 @@ import json
 import tensorflow as tf
 import numpy as np
 
-
 def load_json(file_path):
     with open(file_path, 'r') as f:
         return json.load(f)
@@ -52,3 +51,4 @@ def calc_mean_score(score_dist):
 def ensure_dir_exists(dir):
     if not os.path.exists(dir):
         os.makedirs(dir)
+

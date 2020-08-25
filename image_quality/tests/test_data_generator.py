@@ -9,26 +9,25 @@ IMG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test_images'
 N_CLASSES = 10
 BATCH_SIZE = 2
 BASENET_PREPROCESS = lambda x: x
-IMG_FORMAT = 'jpg'
 TEST_SAMPLES = [
     {
-        'image_id': '42039',
+        'image_id': '42039.jpg',
         'label': [0, 5, 10, 28, 54, 31, 12, 3, 3, 2]
     },
     {
-        'image_id': '42040',
+        'image_id': '42040.jpg',
         'label': [0, 5, 10, 28, 54, 31, 12, 3, 3, 2]
     },
     {
-        'image_id': '42041',
+        'image_id': '42041.jpg',
         'label': [0, 5, 10, 28, 54, 31, 12, 3, 3, 2]
     },
     {
-        'image_id': '42042',
+        'image_id': '42042.jpg',
         'label': [0, 5, 10, 28, 54, 31, 12, 3, 3, 2]
     },
     {
-        'image_id': '42044',
+        'image_id': '42044.jpg',
         'label': [0, 5, 10, 28, 54, 31, 12, 3, 3, 2]
     },
 ]
@@ -37,7 +36,7 @@ TEST_SAMPLES = [
 class TestTrainDataGenerator(unittest.TestCase):
 
     def test_train_data_generator(self):
-        dg = TrainDataGenerator(TEST_SAMPLES, IMG_DIR, BATCH_SIZE, N_CLASSES, BASENET_PREPROCESS, img_format=IMG_FORMAT,
+        dg = TrainDataGenerator(TEST_SAMPLES, IMG_DIR, BATCH_SIZE, N_CLASSES, BASENET_PREPROCESS,
                                 shuffle=False)
         X, y = dg.__getitem__(0)
 
@@ -63,7 +62,7 @@ class TestTrainDataGenerator(unittest.TestCase):
         self.assertEqual(dg.__len__(), expected)
 
     def test_test_data_generator(self):
-        dg = TestDataGenerator(TEST_SAMPLES, IMG_DIR, BATCH_SIZE, N_CLASSES, BASENET_PREPROCESS, img_format=IMG_FORMAT)
+        dg = TestDataGenerator(TEST_SAMPLES, IMG_DIR, BATCH_SIZE, N_CLASSES, BASENET_PREPROCESS)
         X, y = dg.__getitem__(0)
 
         # test image dimensions
