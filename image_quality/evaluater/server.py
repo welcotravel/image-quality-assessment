@@ -4,15 +4,16 @@
 import os
 import tempfile
 from flask import Flask, request, jsonify
-from evaluater.predict import image_file_to_json, image_dir_to_json, predict, score_images, score_video
-from utils.utils import calc_mean_score, save_json
+import image_quality
+from image_quality.evaluater.predict import image_file_to_json, image_dir_to_json, predict, score_images, score_video
+from image_quality.utils.utils import calc_mean_score, save_json
 import urllib
 import shutil
 import argparse
 from keras import backend as K
 from PIL import ImageFile, Image
-from handlers.model_builder import Nima
-from handlers.data_generator import TestDataGenerator
+from image_quality.handlers.model_builder import Nima
+from image_quality.handlers.data_generator import TestDataGenerator
 
 app = Flask('server')
 

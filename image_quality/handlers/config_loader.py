@@ -1,5 +1,5 @@
 
-from utils.utils import load_json
+from image_quality.utils.utils import load_json
 
 
 def load_config(config_file):

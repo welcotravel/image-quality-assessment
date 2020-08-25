@@ -19,14 +19,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN which ffmpeg
 RUN which ffprobe
 
-COPY image_quality /image_quality
-COPY requirements.txt image_quality
-COPY entrypoints /image_quality/entrypoints
+COPY . /image-quality-assessment/
 
-WORKDIR /image_quality
+WORKDIR /image-quality-assessment
 
-RUN pip install -r requirements.txt
+RUN make
 
-ENV PYTHONPATH='/image_quality/:$PYTHONPATH'
+ENV PYTHONPATH='/image-quality-assessment/:$PYTHONPATH'
 
-ENTRYPOINT ["entrypoints/entrypoint.train.gpu.sh"]
+ENTRYPOINT ["/image-quality-assessment/entrypoints/entrypoint.train.gpu.sh"]

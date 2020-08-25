@@ -6,13 +6,22 @@ import argparse
 import urllib
 import tempfile
 import shutil
-from utils.utils import calc_mean_score, save_json
-from handlers.model_builder import Nima
-from handlers.data_generator import TestDataGenerator
+import sys
+from sys import platform
+import image_quality
+from image_quality.utils.utils import calc_mean_score, save_json
+from image_quality.handlers.model_builder import Nima
+from image_quality.handlers.data_generator import TestDataGenerator
 from PIL import ImageFile, Image
 from keras import backend as K
 import videokf as vf
 
+TOOLS_PATH = '/usr/bin/'
+if platform == 'darwin':
+  TOOLS_PATH = '/usr/local/bin/'
+
+FFMPEG_PATH =os.path.join(TOOLS_PATH,'ffmpeg')
+FFPROBE_PATH =os.path.join(TOOLS_PATH,'ffprobe')
 
 def image_file_to_json(img_path):
   img_dir = os.path.dirname(img_path)
@@ -97,7 +106,7 @@ def score_video(model,url_to_video):
   filename = os.path.basename(url_to_video)
   path_to_video = os.path.join(temp_dir,filename)
   urllib.request.urlretrieve(url_to_video, path_to_video)
-  vf.extract_keyframes(path_to_video, ffmpeg_exe='/usr/bin/ffmpeg',ffprobe_exe='/usr/bin/ffprobe',method='iframes')
+  vf.extract_keyframes(path_to_video, ffmpeg_exe=FFMPEG_PATH,ffprobe_exe=FFPROBE_PATH,method='iframes')
   scores = score_images(model,os.path.join(temp_dir,'keyframes'))
   print('rank_video scores',scores)
   # average 3 highest scores for media score

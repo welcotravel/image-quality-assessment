@@ -2,7 +2,7 @@
 import os
 import unittest
 import numpy as np
-from handlers.data_generator import TrainDataGenerator, TestDataGenerator
+from image_quality.handlers.data_generator import TrainDataGenerator, TestDataGenerator
 
 
 IMG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test_images')

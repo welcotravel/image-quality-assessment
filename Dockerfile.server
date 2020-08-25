@@ -19,19 +19,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN which ffmpeg
 RUN which ffprobe
 
-COPY image_quality /image_quality
-COPY requirements.txt image_quality
-COPY entrypoints /image_quality/entrypoints
-COPY models /models
+COPY . /image-quality-assessment/
 
-WORKDIR /image_quality
+WORKDIR /image-quality-assessment
 
-RUN pip install -r requirements.txt
+RUN make
 
-ENV PYTHONPATH='/image_quality/:$PYTHONPATH'
+WORKDIR /image-quality-assessment/image_quality
 
-CMD ["entrypoints/entrypoint.predict.server.sh MobileNet /image_quality/weights.hdf5"]
+ENV PYTHONPATH='/image-quality-assessment/:$PYTHONPATH'
 
-ENTRYPOINT ["entrypoints/entrypoint.predict.server.sh"]
+CMD ["/image-quality-assessment/entrypoints/entrypoint.predict.server.sh MobileNet /image-quality-assessment/image_quality/weights.hdf5"]
+
+ENTRYPOINT ["/image-quality-assessment/entrypoints/entrypoint.predict.server.sh"]
 
 EXPOSE 5005

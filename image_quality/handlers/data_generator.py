@@ -2,7 +2,7 @@
 import os
 import numpy as np
 import tensorflow as tf
-from utils import utils
+from image_quality.utils import utils
 
 
 class TrainDataGenerator(tf.keras.utils.Sequence):

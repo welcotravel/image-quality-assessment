@@ -2,4 +2,4 @@
 set -e
 
 # start training
-python -W ignore -m trainer.train -j /src/$TRAIN_JOB_DIR -i /src/images
+python -W ignore trainer/train.py -j /image-quality-assessment/image_quality/$TRAIN_JOB_DIR -i /image-quality-assessment/image_quality/images

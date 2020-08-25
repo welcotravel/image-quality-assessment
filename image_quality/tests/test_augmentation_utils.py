@@ -1,7 +1,7 @@
 
 import unittest
 import numpy as np
-from utils import utils
+from image_quality.utils import utils
 from unittest.mock import patch
 
 
