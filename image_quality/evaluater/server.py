@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import tempfile
 from flask import Flask, request, jsonify
 from evaluater.predict import image_file_to_json, image_dir_to_json, predict, score_images
 from utils.utils import calc_mean_score, save_json
@@ -32,17 +33,18 @@ def prediction():
         print('images',images)
 
         if images:
-            if os.path.exists('temp'):
-              shutil.rmtree('temp')
-            os.mkdir('temp')
+            temp_dir = tempfile.mkdtemp()
             for image in images:
                 filename_w_ext = os.path.basename(image)
                 try:
-                    urllib.request.urlretrieve(image, 'temp/'+ filename_w_ext)
+                    urllib.request.urlretrieve(image, os.path.join(temp_dir,filename_w_ext))
                 except:
                     print('An exception occurred :' + image)
+                # print('file dest exists?',os.path.exists(os.path.join(temp_dir,filename_w_ext)))
 
-            result = score_images(model,'temp')
+
+            result = score_images(model,temp_dir)
+            shutil.rmtree(temp_dir)
             return jsonify(result)
 
         return jsonify({'error': 'Image is not available'})

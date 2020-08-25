@@ -32,7 +32,7 @@ def image_dir_to_json(img_dir, img_type=None):
 
 
 def predict(model, data_generator):
-    return model.predict_generator(data_generator, workers=8, use_multiprocessing=True, verbose=1)
+    return model.predict(data_generator, workers=8, use_multiprocessing=True, verbose=1)
 
 
 def main(base_model_name, weights_file, image_source, predictions_file):
