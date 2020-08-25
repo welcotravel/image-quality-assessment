@@ -4,6 +4,8 @@ import glob
 import json
 import argparse
 import urllib
+import tempfile
+import shutil
 from utils.utils import calc_mean_score, save_json
 from handlers.model_builder import Nima
 from handlers.data_generator import TestDataGenerator
@@ -90,7 +92,8 @@ def score_images(model,image_source):
 
   return samples
 
-def rank_video(model,url_to_video,temp_dir):
+def score_video(model,url_to_video):
+  temp_dir = tempfile.mkdtemp()
   filename = os.path.basename(url_to_video)
   path_to_video = os.path.join(temp_dir,filename)
   urllib.request.urlretrieve(url_to_video, path_to_video)
@@ -101,8 +104,8 @@ def rank_video(model,url_to_video,temp_dir):
   vals = sorted(scores, key=lambda x: x['mean_score_prediction'], reverse=True)
   vals = vals[:3]
   avg = sum(vals)/len(vals)
-  return [{'image_id':filename,  'mean_score_prediction': avg}]
-
+  shutil.rmtree(temp_dir)
+  return {'image_id':filename,  'mean_score_prediction': avg}
 
 
 if __name__ == '__main__':

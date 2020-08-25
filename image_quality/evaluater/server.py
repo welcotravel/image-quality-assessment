@@ -4,7 +4,7 @@
 import os
 import tempfile
 from flask import Flask, request, jsonify
-from evaluater.predict import image_file_to_json, image_dir_to_json, predict, score_images
+from evaluater.predict import image_file_to_json, image_dir_to_json, predict, score_images, score_video
 from utils.utils import calc_mean_score, save_json
 import urllib
 import shutil
@@ -27,8 +27,8 @@ def load_model(config):
 # todo handle arbitrary media, identify type
 # https://pypi.org/project/python-libmagic/
 
-@app.route('/prediction', methods=['POST'])
-def prediction():
+@app.route('/predict_images', methods=['POST'])
+def predict_images():
   global images
 
   if request.method == 'POST':
@@ -51,6 +51,22 @@ def prediction():
       return jsonify(result)
 
     return jsonify({'error': 'Image is not available'})
+
+@app.route('/predict_videos', methods=['POST'])
+def predict_videos():
+  global videos
+
+  if request.method == 'POST':
+    videos = request.json
+    print('videos',videos)
+
+    result = []
+    if videos:
+      for video in videos:
+        result.append(score_video(model,video))
+      return jsonify(result)
+
+    return jsonify({'error': 'Video is not available'})
 
 if __name__ == '__main__':
 
