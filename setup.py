@@ -18,7 +18,8 @@ setup(
     'Pillow==7.2.*',
     'Flask==1.0.*',
     'keras',
-    'video-kf'
+    'video-kf',
+    'scikit-image==0.17.*'
   ],
   package_data={'image_quality': ['models/MobileNet/*']},
   zip_safe=False

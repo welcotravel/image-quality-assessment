@@ -4,6 +4,7 @@ import json
 import tensorflow as tf
 import numpy as np
 import imageio
+from skimage.transform import resize
 
 def load_json(file_path):
   with open(file_path, 'r') as f:
@@ -36,7 +37,12 @@ def random_horizontal_flip(img):
 
 
 def load_image(img_file, target_size):
-  return np.asarray(tf.keras.preprocessing.image.load_img(img_file, target_size=target_size))
+  img = imageio.imread(img_file)
+  img = img[:,:,:3]
+  return np.asarray(resize(img, target_size))
+  # print(img_file,'imageio.imread',np.asarray(resize(img, target_size)).shape)
+  # print(img_file,'keras.image.load_img',np.asarray(tf.keras.preprocessing.image.load_img(img_file, target_size=target_size)).shape)
+  # return np.asarray(tf.keras.preprocessing.image.load_img(img_file, target_size=target_size))
 
 
 def normalize_labels(labels):
