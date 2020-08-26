@@ -11,15 +11,13 @@ setup(
   license='Apache License 2.0',
   packages=find_packages(),
   install_requires = [
-    'imageio==2.9.*',
     'tensorflow==2.3.*',
     'nose',
     'sklearn',
     'Pillow==7.2.*',
     'Flask==1.0.*',
     'keras',
-    'video-kf',
-    'scikit-image==0.17.*'
+    'video-kf'
   ],
   package_data={'image_quality': ['models/MobileNet/*']},
   zip_safe=False
