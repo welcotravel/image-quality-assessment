@@ -11,6 +11,7 @@ setup(
   license='Apache License 2.0',
   packages=find_packages(),
   install_requires = [
+    'imageio==2.9.*',
     'tensorflow==2.3.*',
     'nose',
     'sklearn',
