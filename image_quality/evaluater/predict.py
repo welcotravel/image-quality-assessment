@@ -108,7 +108,9 @@ def score_video(model,url_to_video):
   urllib.request.urlretrieve(url_to_video, path_to_video)
   vf.extract_keyframes(path_to_video, ffmpeg_exe=FFMPEG_PATH,ffprobe_exe=FFPROBE_PATH,method='iframes')
   scores = score_images(model,os.path.join(temp_dir,'keyframes'))
-  print('rank_video scores',scores)
+  print('rank_video scores')
+  for score in scores:
+    print(score)
   # average 3 highest scores for media score
   vals = []
   for score in scores:
