@@ -64,7 +64,8 @@ def predict_videos():
     result = []
     if videos:
       for video in videos:
-        result.append(score_video([model],video))
+        ares = score_video([model],video)
+        result.append(ares[0])
       return jsonify(result)
 
     return jsonify({'error': 'Video is not available'})
