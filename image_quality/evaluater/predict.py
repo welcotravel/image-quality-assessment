@@ -101,25 +101,30 @@ def score_images(model,image_source):
 
   return samples
 
-def score_video(model,url_to_video):
+def score_video(models,url_to_video):
   temp_dir = tempfile.mkdtemp()
   filename = os.path.basename(url_to_video)
   path_to_video = os.path.join(temp_dir,filename)
   urllib.request.urlretrieve(url_to_video, path_to_video)
   vf.extract_keyframes(path_to_video, ffmpeg_exe=FFMPEG_PATH,ffprobe_exe=FFPROBE_PATH,method='iframes')
-  scores = score_images(model,os.path.join(temp_dir,'keyframes'))
-  print('rank_video scores')
-  for score in scores:
-    print(score)
-  # average 3 highest scores for media score
-  vals = []
-  for score in scores:
-    vals.append(score['mean_score_prediction'])
-  vals = sorted(vals, reverse=True)
-  vals = vals[:3]
-  avg = sum(vals)/len(vals)
+
+  results = []
+  for model in models:
+    scores = score_images(model,os.path.join(temp_dir,'keyframes'))
+    print('rank_video scores')
+    for score in scores:
+      print(score)
+    # average 3 highest scores for media score
+    vals = []
+    for score in scores:
+      vals.append(score['mean_score_prediction'])
+    vals = sorted(vals, reverse=True)
+    vals = vals[:3]
+    avg = sum(vals)/len(vals)
+    results.append({'image_id':filename,  'mean_score_prediction': avg})
+
   shutil.rmtree(temp_dir)
-  return {'image_id':filename,  'mean_score_prediction': avg}
+  return results
 
 
 if __name__ == '__main__':
