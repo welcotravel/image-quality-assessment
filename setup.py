@@ -11,7 +11,7 @@ setup(
   license='Apache License 2.0',
   packages=find_packages(),
   install_requires = [
-    'tensorflow==2.3.*',
+    'tensorflow==2.2.*',
     'nose',
     'sklearn',
     'Pillow==7.2.*',

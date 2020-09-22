@@ -1,4 +1,4 @@
-tensorflow==2.3.*
+tensorflow==2.2.*
 nose
 sklearn
 Pillow==7.2.*
