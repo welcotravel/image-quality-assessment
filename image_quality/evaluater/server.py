@@ -5,7 +5,7 @@ import os
 import tempfile
 from flask import Flask, request, jsonify
 import image_quality
-from image_quality.evaluater.predict import image_file_to_json, image_dir_to_json, predict, score_images, score_video
+from image_quality.evaluater.predict import fetch_model, image_file_to_json, image_dir_to_json, predict, score_images, score_video
 from image_quality.utils.utils import calc_mean_score, save_json
 import urllib
 import shutil
@@ -18,6 +18,7 @@ from image_quality.handlers.data_generator import TestDataGenerator
 app = Flask('server')
 
 def load_model(config):
+  fetch_model()
   global model
   model = Nima(config.base_model_name)
   model.build()
