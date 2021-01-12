@@ -19,6 +19,6 @@ setup(
     'keras',
     'video-kf'
   ],
-  package_data={'image_quality': ['models/MobileNet/*']},
+  package_data={'image_quality': ['download.sh']},
   zip_safe=False
 )

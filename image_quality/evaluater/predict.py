@@ -23,6 +23,25 @@ if platform == 'darwin':
 FFMPEG_PATH =os.path.join(TOOLS_PATH,'ffmpeg')
 FFPROBE_PATH =os.path.join(TOOLS_PATH,'ffprobe')
 
+# download model
+dirname = os.path.dirname(__file__)
+working_path = '/tmp/image_quality/models/MobileNet'
+model_files = [
+  'config_aesthetic_cpu.json',
+  'config_aesthetic_gpu.json',
+  'config_technical_cpu.json',
+  'config_technical_gpu.json',
+  'weights_mobilenet_aesthetic_0.07.hdf5',
+  'weights_mobilenet_technical_0.11.hdf5',
+]
+
+files_exist = True
+for model_file in model_files:
+  file_path   = os.path.join(working_path,model_file)
+  files_exist = files_exist and os.path.exists(file_path)
+if not files_exist:
+  os.system(os.path.join(dirname,'../','download.sh'))
+
 def image_file_to_json(img_path):
   img_dir = os.path.dirname(img_path)
   img_id = os.path.basename(img_path)
