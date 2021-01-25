@@ -138,10 +138,11 @@ def score_video(models,url_to_video):
     vals = []
     for score in scores:
       vals.append(score['mean_score_prediction'])
-    vals = sorted(vals, reverse=True)
-    vals = vals[:3]
-    avg = sum(vals)/len(vals)
-    results.append({'image_id':filename,  'mean_score_prediction': avg})
+    top_vals = vals.copy()
+    top_vals = sorted(top_vals, reverse=True)
+    top_vals = top_vals[:3]
+    avg = sum(top_vals)/len(top_vals)
+    results.append({'image_id':filename,  'mean_score_prediction': avg, 'scores': vals })
 
   shutil.rmtree(temp_dir)
   return results
