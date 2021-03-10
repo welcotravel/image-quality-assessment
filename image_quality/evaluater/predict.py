@@ -148,20 +148,23 @@ def score_video(models,url_to_video):
   shutil.rmtree(temp_dir)
   return results
 
-def get_keyframe(video_file,ffmpeg_exe=None,ffprobe_exe=None,output_dir="keyframes",frame_index=None):
+def get_keyframes(video_file,ffmpeg_exe=None,ffprobe_exe=None,output_dir="keyframes",frames=[]):
   iframes = get_iframes(ffprobe_exe,video_file)
-  selected_frames = [iframes[frame_index]]
+  selected_frames = [iframes[i] for i in frames]
+  print('frames',frames,'iframes',iframes,'selected_frames',selected_frames)
   frames_dir = extract_frames(ffmpeg_exe, video_file, frames_selected=selected_frames, output_dir=output_dir, frame_type='iframes')
   files = os.listdir(frames_dir)
-  keyframe_file = files[0] if len(files) > 0 else None
-  return os.path.join(frames_dir,keyframe_file)
+  final_files = []
+  for file in files:
+    final_files.append(os.path.join(frames_dir,file))
+  return final_files
 
 
-def extract_best_keyframe(url_to_video,technical_scores,aesthetic_scores):
-  extracted_frame_path = None
-  results = { 'error': None, 'temp_dir': None, 'extracted_frame_path': extracted_frame_path }
-  if (len(technical_scores) != len(aesthetic_scores) or len(technical_scores) == 0):
-    error_msg = 'extract_best_keyframe error technical_scores != aesthetic_scores length, or no scores passed technical_scores:' + json.dumps(technical_scores) + ' aesthetic_scores: ' + json.dumps(aesthetic_scores)
+def extract_keyframes(url_to_video,iframes):
+  extracted_frames =[]
+  results = { 'error': None, 'temp_dir': None, 'extracted_frames': extracted_frames }
+  if (len(iframes) == 0):
+    error_msg = 'extract_best_keyframe error no iframes specified:' + json.dumps(iframes)
     print(error_msg)
     results['error'] = error_msg
     return results
@@ -172,22 +175,8 @@ def extract_best_keyframe(url_to_video,technical_scores,aesthetic_scores):
   path_to_video = os.path.join(temp_dir,filename)
   urllib.request.urlretrieve(url_to_video, path_to_video)
 
-  imax      = None
-  max_score = None
-  for i, (tscore, ascore) in enumerate(zip(technical_scores, aesthetic_scores)):
-    score = (tscore+ascore)/2.0
-    if max_score is None or score > max_score:
-      max_score = score
-      imax = i 
-
-  if imax is None:
-    error_msg = 'extract_best_keyframe no imax'
-    print(error_msg)
-    results['error'] = error_msg
-    return results
-
-  extracted_frame_path = get_keyframe(path_to_video, ffmpeg_exe=FFMPEG_PATH,ffprobe_exe=FFPROBE_PATH,frame_index=imax)
-  results['extracted_frame_path'] = extracted_frame_path
+  extracted_frames = get_keyframes(path_to_video, ffmpeg_exe=FFMPEG_PATH,ffprobe_exe=FFPROBE_PATH,frames=iframes)
+  results['extracted_frames'] = extracted_frames
   return results
 
 
