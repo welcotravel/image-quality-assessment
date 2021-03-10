@@ -15,6 +15,7 @@ from image_quality.handlers.data_generator import TestDataGenerator
 from PIL import ImageFile, Image
 from keras import backend as K
 import videokf as vf
+from videokf.utils.vidutils import extract_frames,get_iframes
 
 TOOLS_PATH = '/usr/bin/'
 if platform == 'darwin':
@@ -145,6 +146,48 @@ def score_video(models,url_to_video):
     results.append({'image_id':filename,  'mean_score_prediction': avg, 'scores': vals })
 
   shutil.rmtree(temp_dir)
+  return results
+
+def get_keyframe(video_file,ffmpeg_exe=None,ffprobe_exe=None,output_dir="keyframes",frame_index=None):
+  iframes = get_iframes(ffprobe_exe,video_file)
+  selected_frames = [iframes[frame_index]]
+  frames_dir = extract_frames(ffmpeg_exe, video_file, frames_selected=selected_frames, output_dir=output_dir, frame_type='iframes')
+  files = os.listdir(frames_dir)
+  keyframe_file = files[0] if len(files) > 0 else None
+  return os.path.join(frames_dir,keyframe_file)
+
+
+def extract_best_keyframe(url_to_video,technical_scores,aesthetic_scores):
+  extracted_frame_path = None
+  results = { 'error': None, 'temp_dir': None, 'extracted_frame_path': extracted_frame_path }
+  if (len(technical_scores) != len(aesthetic_scores) or len(technical_scores) == 0):
+    error_msg = 'extract_best_keyframe error technical_scores != aesthetic_scores length, or no scores passed technical_scores:' + json.dumps(technical_scores) + ' aesthetic_scores: ' + json.dumps(aesthetic_scores)
+    print(error_msg)
+    results['error'] = error_msg
+    return results
+
+  temp_dir = tempfile.mkdtemp()
+  results['temp_dir'] = temp_dir
+  filename = os.path.basename(url_to_video)
+  path_to_video = os.path.join(temp_dir,filename)
+  urllib.request.urlretrieve(url_to_video, path_to_video)
+
+  imax      = None
+  max_score = None
+  for i, (tscore, ascore) in enumerate(zip(technical_scores, aesthetic_scores)):
+    score = (tscore+ascore)/2.0
+    if max_score is None or score > max_score:
+      max_score = score
+      imax = i 
+
+  if imax is None:
+    error_msg = 'extract_best_keyframe no imax'
+    print(error_msg)
+    results['error'] = error_msg
+    return results
+
+  extracted_frame_path = get_keyframe(path_to_video, ffmpeg_exe=FFMPEG_PATH,ffprobe_exe=FFPROBE_PATH,frame_index=imax)
+  results['extracted_frame_path'] = extracted_frame_path
   return results
 
 
